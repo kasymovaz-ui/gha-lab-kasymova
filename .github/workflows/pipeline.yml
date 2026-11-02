@@ -1,0 +1,25 @@
+name: Pipeline
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Создать файл
+        run: |
+          echo "Сборка номер ${{ github.run_number }}" > report.txt
+      - name: Сохранить файл
+        uses: actions/upload-artifact@v4
+        with:
+          name: report
+          path: report.txt
+
+  show:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Получить файл
+        uses: actions/download-artifact@v4
+        with:
+          name: report
+      - name: Показать файл
+        run: cat report.txt
